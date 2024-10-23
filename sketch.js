@@ -4,16 +4,34 @@ const tileImages = [];
 let grid = [];
 
 const DIM = 25;
+const path = 'tiles/mountains'; // <-- what folder of tiles to use!!
 
 function preload() {
-  // const path = 'rail';
-  // for (let i = 0; i < 7; i++) {
-  //   tileImages[i] = loadImage(`${path}/tile${i}.png`);
-  // }
-
-  const path = 'tiles/circuit-coding-train';
-  for (let i = 0; i < 13; i++) {
-    tileImages[i] = loadImage(`${path}/${i}.png`);
+  switch(path){
+    case "tiles/rail": 
+      for (let i = 0; i < 7; i++) {
+        tileImages[i] = loadImage(`${path}/tile${i}.png`);
+      }
+      break;
+    case "tiles/circuit":
+    case "tiles/circuit-coding-train": 
+      for (let i = 0; i < 13; i++) {
+        tileImages[i] = loadImage(`${path}/${i}.png`);
+      }
+      break;
+    case "tiles/demo":
+    case "tiles/polka":
+    case "tiles/roads":
+    case "tiles/mountains": 
+    case "tiles/demo-tracks":
+    case "tiles/train-tracks":
+      tileImages[0] = loadImage(`${path}/blank.png`);
+      tileImages[1] = loadImage(`${path}/down.png`);
+      tileImages[2] = loadImage(`${path}/left.png`);
+      tileImages[3] = loadImage(`${path}/right.png`);
+      tileImages[4] = loadImage(`${path}/up.png`);
+      break;
+    default: break;
   }
 }
 
@@ -30,30 +48,57 @@ function setup() {
   createCanvas(400, 400);
   //randomSeed(15);
 
-  // tiles[0] = new Tile(tileImages[0], ['AAA', 'AAA', 'AAA', 'AAA']);
-  // tiles[1] = new Tile(tileImages[1], ['ABA', 'ABA', 'ABA', 'AAA']);
-  // tiles[2] = new Tile(tileImages[2], ['BAA', 'AAB', 'AAA', 'AAA']);
-  // tiles[3] = new Tile(tileImages[3], ['BAA', 'AAA', 'AAB', 'AAA']);
-  // tiles[4] = new Tile(tileImages[4], ['ABA', 'ABA', 'AAA', 'AAA']);
-  // tiles[5] = new Tile(tileImages[5], ['ABA', 'AAA', 'ABA', 'AAA']);
-  // tiles[6] = new Tile(tileImages[6], ['ABA', 'ABA', 'ABA', 'ABA']);
-
-  // Loaded and created the tiles
-  tiles[0] = new Tile(tileImages[0], ['AAA', 'AAA', 'AAA', 'AAA']);
-  tiles[1] = new Tile(tileImages[1], ['BBB', 'BBB', 'BBB', 'BBB']);
-  tiles[2] = new Tile(tileImages[2], ['BBB', 'BCB', 'BBB', 'BBB']);
-  tiles[3] = new Tile(tileImages[3], ['BBB', 'BDB', 'BBB', 'BDB']);
-  tiles[4] = new Tile(tileImages[4], ['ABB', 'BCB', 'BBA', 'AAA']);
-  tiles[5] = new Tile(tileImages[5], ['ABB', 'BBB', 'BBB', 'BBA']);
-  tiles[6] = new Tile(tileImages[6], ['BBB', 'BCB', 'BBB', 'BCB']);
-  tiles[7] = new Tile(tileImages[7], ['BDB', 'BCB', 'BDB', 'BCB']);
-  tiles[8] = new Tile(tileImages[8], ['BDB', 'BBB', 'BCB', 'BBB']);
-  tiles[9] = new Tile(tileImages[9], ['BCB', 'BCB', 'BBB', 'BCB']);
-  tiles[10] = new Tile(tileImages[10], ['BCB', 'BCB', 'BCB', 'BCB']);
-  tiles[11] = new Tile(tileImages[11], ['BCB', 'BCB', 'BBB', 'BBB']);
-  tiles[12] = new Tile(tileImages[12], ['BBB', 'BCB', 'BBB', 'BCB']);
-
-  for (let i = 0; i < 12; i++) {
+  switch(path){
+    case "tiles/rail":
+      tiles[0] = new Tile(tileImages[0], ['AAA', 'AAA', 'AAA', 'AAA']);
+      tiles[1] = new Tile(tileImages[1], ['ABA', 'ABA', 'ABA', 'AAA']);
+      tiles[2] = new Tile(tileImages[2], ['BAA', 'AAB', 'AAA', 'AAA']);
+      tiles[3] = new Tile(tileImages[3], ['BAA', 'AAA', 'AAB', 'AAA']);
+      tiles[4] = new Tile(tileImages[4], ['ABA', 'ABA', 'AAA', 'AAA']);
+      tiles[5] = new Tile(tileImages[5], ['ABA', 'AAA', 'ABA', 'AAA']);
+      tiles[6] = new Tile(tileImages[6], ['ABA', 'ABA', 'ABA', 'ABA']);
+      break;
+    case "tiles/circuit-coding-train":
+      tiles[0] = new Tile(tileImages[0], ['AAA', 'AAA', 'AAA', 'AAA']);
+      tiles[1] = new Tile(tileImages[1], ['BBB', 'BBB', 'BBB', 'BBB']);
+      tiles[2] = new Tile(tileImages[2], ['BBB', 'BCB', 'BBB', 'BBB']);
+      tiles[3] = new Tile(tileImages[3], ['BBB', 'BDB', 'BBB', 'BDB']);
+      tiles[4] = new Tile(tileImages[4], ['ABB', 'BCB', 'BBA', 'AAA']);
+      tiles[5] = new Tile(tileImages[5], ['ABB', 'BBB', 'BBB', 'BBA']);
+      tiles[6] = new Tile(tileImages[6], ['BBB', 'BCB', 'BBB', 'BCB']);
+      tiles[7] = new Tile(tileImages[7], ['BDB', 'BCB', 'BDB', 'BCB']);
+      tiles[8] = new Tile(tileImages[8], ['BDB', 'BBB', 'BCB', 'BBB']);
+      tiles[9] = new Tile(tileImages[9], ['BCB', 'BCB', 'BBB', 'BCB']);
+      tiles[10] = new Tile(tileImages[10], ['BCB', 'BCB', 'BCB', 'BCB']);
+      tiles[11] = new Tile(tileImages[11], ['BCB', 'BCB', 'BBB', 'BBB']);
+      tiles[12] = new Tile(tileImages[12], ['BBB', 'BCB', 'BBB', 'BCB']);
+      break;
+    case "tiles/demo":
+    case "tiles/polka":
+    case "tiles/roads":
+      tiles[0] = new Tile(tileImages[0], ['AAA', 'AAA', 'AAA', 'AAA']);
+      tiles[1] = new Tile(tileImages[1], ['AAA', 'BBB', 'BBB', 'BBB']);
+      tiles[2] = new Tile(tileImages[2], ['BBB', 'AAA', 'BBB', 'BBB']);
+      tiles[3] = new Tile(tileImages[3], ['BBB', 'BBB', 'BBB', 'AAA']);
+      tiles[4] = new Tile(tileImages[4], ['BBB', 'BBB', 'AAA', 'BBB']);
+      break;
+    case "tiles/mountains": // fix adjacencies
+      // TEMP:
+      tiles[0] = new Tile(tileImages[0], ['AAA', 'AAA', 'AAA', 'AAA']);
+      tiles[1] = new Tile(tileImages[1], ['BAB', 'BBB', 'BBB', 'BBB']);
+      tiles[2] = new Tile(tileImages[2], ['BBB', 'BAB', 'BBB', 'BBB']);
+      tiles[3] = new Tile(tileImages[3], ['BBB', 'BBB', 'BBB', 'BAB']);
+      tiles[4] = new Tile(tileImages[4], ['BBB', 'BBB', 'BAB', 'BBB']);
+    case "tiles/demo-tracks": // fix adjacencies
+    case "tiles/train-tracks": // ""
+      tiles[0] = new Tile(tileImages[0], ['AAA', 'AAA', 'AAA', 'AAA']);
+      tiles[1] = new Tile(tileImages[1], ['AAA', 'ABA', 'ABA', 'ABA']);
+      tiles[2] = new Tile(tileImages[2], ['ABA', 'AAA', 'ABA', 'ABA']);
+      tiles[3] = new Tile(tileImages[3], ['ABA', 'ABA', 'ABA', 'AAA']);
+      tiles[4] = new Tile(tileImages[4], ['ABA', 'ABA', 'AAA', 'ABA']);
+    default: break;
+    }
+  for (let i = 0; i < tiles.length - 1; i++) {
     tiles[i].index = i;
   }
 
