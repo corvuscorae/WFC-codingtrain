@@ -5,7 +5,7 @@ let grid = [];
 
 const DIM = 25;
 let ready = false;
-let meep = true;
+let brakes = false;
 
 // LOAD TILE IMAGES HERE!!
 function preload() {
@@ -199,14 +199,14 @@ function mousePressed() {
 
 function draw() {
   if(ready){ WFC(); }
-  if(!meep) { stopWFC() }
+  if(brakes) { stopWFC() }
 }
 
 function stopWFC(){
   tiles = [];
   grid = [];
   ready = false;
-  meep = true;
+  brakes = false;
 }
 
 function WFC() {
@@ -233,7 +233,7 @@ function WFC() {
   gridCopy = gridCopy.filter((a) => !a.collapsed);
 
   if (gridCopy.length == 0) {
-    meep = false;
+    //brakes = true;
     return;
   }
   gridCopy.sort((a, b) => {
@@ -255,7 +255,7 @@ function WFC() {
   const pick = random(cell.options);
   if (pick === undefined) {
     startOver();
-    meep = false;
+    //brakes = true;
     return;
   }
   cell.options = [pick];
