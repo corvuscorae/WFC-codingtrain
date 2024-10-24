@@ -1,37 +1,48 @@
 let tiles = [];
-const tileImages = [];
+let all = []
 
 let grid = [];
 
 const DIM = 25;
-const path = 'tiles/mountains'; // <-- what folder of tiles to use!!
+let ready = false;
+let meep = true;
 
+// LOAD TILE IMAGES HERE!!
 function preload() {
-  switch(path){
-    case "tiles/rail": 
-      for (let i = 0; i < 7; i++) {
-        tileImages[i] = loadImage(`${path}/tile${i}.png`);
-      }
-      break;
-    case "tiles/circuit":
-    case "tiles/circuit-coding-train": 
-      for (let i = 0; i < 13; i++) {
-        tileImages[i] = loadImage(`${path}/${i}.png`);
-      }
-      break;
-    case "tiles/demo":
-    case "tiles/polka":
-    case "tiles/roads":
-    case "tiles/mountains": 
-    case "tiles/demo-tracks":
-    case "tiles/train-tracks":
-      tileImages[0] = loadImage(`${path}/blank.png`);
-      tileImages[1] = loadImage(`${path}/down.png`);
-      tileImages[2] = loadImage(`${path}/left.png`);
-      tileImages[3] = loadImage(`${path}/right.png`);
-      tileImages[4] = loadImage(`${path}/up.png`);
-      break;
-    default: break;
+  // naming convention: [blank, down, left, right, up].png
+  let directionDirectories = [  
+    "tiles/demo",
+    "tiles/demo-tracks",
+    "tiles/mountains",
+    "tiles/pipes",
+    "tiles/polka",
+    "tiles/roads",
+    "tiles/train-tracks",
+  ]
+
+  // naming convention: [i].png 
+  let indexedDirectories = [  
+    {path: "tiles/circuit", num: 13},
+    {path: "tiles/circuit-coding-train", num: 13},
+    {path: "tiles/rail", num: 7},
+  ]
+
+  for(let dir of indexedDirectories){
+    let images = [];
+    for (let i = 0; i < dir.num; i++) { images[i] = loadImage(`${dir.path}/${i}.png`); }
+    all.push({ key: dir.path, array: images });
+  }
+
+  for(let dir of directionDirectories){
+    let images = [];
+    for (let i = 0; i < 5; i++) { 
+      images[0] = loadImage(`${dir}/blank.png`);
+      images[1] = loadImage(`${dir}/down.png`);
+      images[2] = loadImage(`${dir}/left.png`);
+      images[3] = loadImage(`${dir}/right.png`);
+      images[4] = loadImage(`${dir}/up.png`);
+    }
+    all.push({ key: dir, array: images });
   }
 }
 
@@ -45,8 +56,40 @@ function removeDuplicatedTiles(tiles) {
 }
 
 function setup() {
-  createCanvas(400, 400);
+  let canvas = {width: 800, height: 800}
+  createCanvas(canvas.width, canvas.height);
+  const directory = "tiles/"
+  
   //randomSeed(15);
+  // USER INPUT
+  input = createInput('');
+  input.position(50, canvas.height + 50);
+  let button = createButton('go');
+  button.position(input.x + input.width, input.y);
+  button.mousePressed(() => {
+    if(!ready && input.value().length > 0){
+      let path = directory + input.value();
+      ready = makeTilesArray(path);
+    }
+    else if(ready && input.value().length > 0){
+      stopWFC();
+
+      let path = directory + input.value();
+      ready = makeTilesArray(path);
+    }
+  });
+}
+
+// DEFINE ADJACENCIES FOR TILESET HERE!!
+function makeTilesArray(path){
+  let tileImages;
+  let check = all.filter(item => item.key == path);
+  if(check.length > 0){ tileImages = check[0].array; }
+  else{ 
+    console.log(`please enter the name of a directory in "tiles/" that contains tile images
+      > "${path}" does not contain tile images.`); 
+    return false;
+  }
 
   switch(path){
     case "tiles/rail":
@@ -58,6 +101,7 @@ function setup() {
       tiles[5] = new Tile(tileImages[5], ['ABA', 'AAA', 'ABA', 'AAA']);
       tiles[6] = new Tile(tileImages[6], ['ABA', 'ABA', 'ABA', 'ABA']);
       break;
+    case "tiles/circuit":
     case "tiles/circuit-coding-train":
       tiles[0] = new Tile(tileImages[0], ['AAA', 'AAA', 'AAA', 'AAA']);
       tiles[1] = new Tile(tileImages[1], ['BBB', 'BBB', 'BBB', 'BBB']);
@@ -89,19 +133,22 @@ function setup() {
       tiles[2] = new Tile(tileImages[2], ['BBB', 'BAB', 'BBB', 'BBB']);
       tiles[3] = new Tile(tileImages[3], ['BBB', 'BBB', 'BBB', 'BAB']);
       tiles[4] = new Tile(tileImages[4], ['BBB', 'BBB', 'BAB', 'BBB']);
-    case "tiles/demo-tracks": // fix adjacencies
-    case "tiles/train-tracks": // ""
+    case "tiles/pipes": 
+    case "tiles/demo-tracks": 
+    case "tiles/train-tracks":
       tiles[0] = new Tile(tileImages[0], ['AAA', 'AAA', 'AAA', 'AAA']);
       tiles[1] = new Tile(tileImages[1], ['AAA', 'ABA', 'ABA', 'ABA']);
       tiles[2] = new Tile(tileImages[2], ['ABA', 'AAA', 'ABA', 'ABA']);
       tiles[3] = new Tile(tileImages[3], ['ABA', 'ABA', 'ABA', 'AAA']);
       tiles[4] = new Tile(tileImages[4], ['ABA', 'ABA', 'AAA', 'ABA']);
-    default: break;
+    default: 
+      console.log(`problem with path '${path}'`)
+      break;
     }
   for (let i = 0; i < tiles.length - 1; i++) {
     tiles[i].index = i;
   }
-
+  
   const initialTileCount = tiles.length;
   for (let i = 0; i < initialTileCount; i++) {
     let tempTiles = [];
@@ -111,15 +158,16 @@ function setup() {
     tempTiles = removeDuplicatedTiles(tempTiles);
     tiles = tiles.concat(tempTiles);
   }
-  console.log(tiles.length);
-
+  //console.log(tiles.length);
+  
   // Generate the adjacency rules based on edges
   for (let i = 0; i < tiles.length; i++) {
     const tile = tiles[i];
     tile.analyze(tiles);
   }
-
+  
   startOver();
+  return true;
 }
 
 function startOver() {
@@ -150,6 +198,18 @@ function mousePressed() {
 }
 
 function draw() {
+  if(ready){ WFC(); }
+  if(!meep) { stopWFC() }
+}
+
+function stopWFC(){
+  tiles = [];
+  grid = [];
+  ready = false;
+  meep = true;
+}
+
+function WFC() {
   background(0);
 
   const w = width / DIM;
@@ -171,10 +231,9 @@ function draw() {
   // Pick cell with least entropy
   let gridCopy = grid.slice();
   gridCopy = gridCopy.filter((a) => !a.collapsed);
-  // console.table(grid);
-  // console.table(gridCopy);
 
   if (gridCopy.length == 0) {
+    meep = false;
     return;
   }
   gridCopy.sort((a, b) => {
@@ -196,6 +255,7 @@ function draw() {
   const pick = random(cell.options);
   if (pick === undefined) {
     startOver();
+    meep = false;
     return;
   }
   cell.options = [pick];
@@ -253,6 +313,7 @@ function draw() {
         nextGrid[index] = new Cell(options);
       }
     }
+
   }
 
   grid = nextGrid;
