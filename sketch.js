@@ -3,7 +3,7 @@ let all = []
 
 let grid = [];
 
-const DIM = 25;
+const DIM = 10;
 let ready = false;
 let brakes = false;
 
@@ -18,6 +18,7 @@ function preload() {
     "tiles/polka",
     "tiles/roads",
     "tiles/train-tracks",
+    "tiles/kenney-simple"
   ]
 
   // naming convention: [i].png 
@@ -25,6 +26,8 @@ function preload() {
     {path: "tiles/circuit", num: 13},
     {path: "tiles/circuit-coding-train", num: 13},
     {path: "tiles/rail", num: 7},
+    {path: "tiles/kenney-all", num: 20},
+    {path: "tiles/kenney-curvy", num: 16},
   ]
 
   for(let dir of indexedDirectories){
@@ -58,10 +61,14 @@ function removeDuplicatedTiles(tiles) {
 function setup() {
   let canvas = {width: 800, height: 800}
   createCanvas(canvas.width, canvas.height);
+
   const directory = "tiles/"
   
   //randomSeed(15);
   // USER INPUT
+  let div = createDiv("directory:");
+  div.position(50, canvas.height + 25);
+
   input = createInput('');
   input.position(50, canvas.height + 50);
   let button = createButton('go');
@@ -126,21 +133,63 @@ function makeTilesArray(path){
       tiles[3] = new Tile(tileImages[3], ['BBB', 'BBB', 'BBB', 'AAA']);
       tiles[4] = new Tile(tileImages[4], ['BBB', 'BBB', 'AAA', 'BBB']);
       break;
-    case "tiles/mountains": // fix adjacencies
-      // TEMP:
+    case "tiles/mountains": // fix adjacencies ??
       tiles[0] = new Tile(tileImages[0], ['AAA', 'AAA', 'AAA', 'AAA']);
       tiles[1] = new Tile(tileImages[1], ['BAB', 'BBB', 'BBB', 'BBB']);
       tiles[2] = new Tile(tileImages[2], ['BBB', 'BAB', 'BBB', 'BBB']);
       tiles[3] = new Tile(tileImages[3], ['BBB', 'BBB', 'BBB', 'BAB']);
       tiles[4] = new Tile(tileImages[4], ['BBB', 'BBB', 'BAB', 'BBB']);
+      break;
     case "tiles/pipes": 
     case "tiles/demo-tracks": 
     case "tiles/train-tracks":
+    case "tiles/kenney-simple":
       tiles[0] = new Tile(tileImages[0], ['AAA', 'AAA', 'AAA', 'AAA']);
       tiles[1] = new Tile(tileImages[1], ['AAA', 'ABA', 'ABA', 'ABA']);
       tiles[2] = new Tile(tileImages[2], ['ABA', 'AAA', 'ABA', 'ABA']);
       tiles[3] = new Tile(tileImages[3], ['ABA', 'ABA', 'ABA', 'AAA']);
       tiles[4] = new Tile(tileImages[4], ['ABA', 'ABA', 'AAA', 'ABA']);
+      break;
+    case "tiles/kenney-all":
+      tiles[0] = new Tile(tileImages[0], ['AAA', 'AAA', 'AAA', 'AAA']);
+      tiles[1] = new Tile(tileImages[1], ['AAA', 'ABA', 'ABA', 'AAA']);
+      tiles[2] = new Tile(tileImages[2], ['AAA', 'AAA', 'ABA', 'ABA']);
+      tiles[3] = new Tile(tileImages[3], ['AAA', 'ABA', 'ABA', 'AAA']);
+      tiles[4] = new Tile(tileImages[4], ['AAA', 'AAA', 'ABA', 'ABA']);
+      tiles[5] = new Tile(tileImages[5], ['AAA', 'ABA', 'ABA', 'ABA']);
+      tiles[6] = new Tile(tileImages[6], ['ABA', 'AAA', 'ABA', 'AAA']);
+      tiles[7] = new Tile(tileImages[7], ['AAA', 'ABA', 'AAA', 'ABA']);
+      tiles[8] = new Tile(tileImages[8], ['ABA', 'ABA', 'ABA', 'ABA']);
+      tiles[9] = new Tile(tileImages[9], ['AAA', 'AAA', 'ABA', 'AAA']);
+      tiles[10] = new Tile(tileImages[10], ['AAA', 'AAA', 'AAA', 'ABA']);
+      tiles[11] = new Tile(tileImages[11], ['ABA', 'ABA', 'AAA', 'AAA']);
+      tiles[12] = new Tile(tileImages[12], ['ABA', 'AAA', 'AAA', 'ABA']);
+      tiles[13] = new Tile(tileImages[13], ['ABA', 'ABA', 'AAA', 'AAA']);
+      tiles[14] = new Tile(tileImages[14], ['ABA', 'AAA', 'AAA', 'ABA']);
+      tiles[15] = new Tile(tileImages[15], ['ABA', 'ABA', 'AAA', 'ABA']);
+      tiles[16] = new Tile(tileImages[16], ['ABA', 'ABA', 'ABA', 'AAA']);
+      tiles[17] = new Tile(tileImages[17], ['ABA', 'AAA', 'ABA', 'ABA']);
+      tiles[18] = new Tile(tileImages[18], ['ABA', 'AAA', 'AAA', 'AAA']);
+      tiles[19] = new Tile(tileImages[19], ['AAA', 'ABA', 'AAA', 'AAA']);
+      break;
+    case "tiles/kenney-curvy":
+        tiles[0] = new Tile(tileImages[0], ['AAA', 'AAA', 'AAA', 'AAA']);
+        tiles[1] = new Tile(tileImages[1], ['AAA', 'ABA', 'ABA', 'AAA']);
+        tiles[2] = new Tile(tileImages[2], ['AAA', 'AAA', 'ABA', 'ABA']);
+        tiles[3] = new Tile(tileImages[3], ['AAA', 'ABA', 'ABA', 'ABA']);
+        tiles[4] = new Tile(tileImages[4], ['ABA', 'AAA', 'ABA', 'AAA']);
+        tiles[5] = new Tile(tileImages[5], ['AAA', 'ABA', 'AAA', 'ABA']);
+        tiles[6] = new Tile(tileImages[6], ['ABA', 'ABA', 'ABA', 'ABA']);
+        tiles[7] = new Tile(tileImages[7], ['AAA', 'AAA', 'ABA', 'AAA']);
+        tiles[8] = new Tile(tileImages[8], ['AAA', 'AAA', 'AAA', 'ABA']);
+        tiles[9] = new Tile(tileImages[9], ['ABA', 'ABA', 'AAA', 'AAA']);
+        tiles[10] = new Tile(tileImages[10], ['ABA', 'AAA', 'AAA', 'ABA']);
+        tiles[11] = new Tile(tileImages[11], ['ABA', 'ABA', 'AAA', 'ABA']);
+        tiles[12] = new Tile(tileImages[12], ['ABA', 'ABA', 'ABA', 'AAA']);
+        tiles[13] = new Tile(tileImages[13], ['ABA', 'AAA', 'ABA', 'ABA']);
+        tiles[14] = new Tile(tileImages[14], ['ABA', 'AAA', 'AAA', 'AAA']);
+        tiles[15] = new Tile(tileImages[15], ['AAA', 'ABA', 'AAA', 'AAA']);
+        break;
     default: 
       console.log(`problem with path '${path}'`)
       break;
